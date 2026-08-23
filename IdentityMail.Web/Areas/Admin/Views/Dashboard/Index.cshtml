@@ -1,0 +1,122 @@
+﻿@using IdentityMail.Web.Areas.Admin.Models
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<main class="main-content">
+    <!-- TopAppBar -->
+    <header style="background-color: #131313; border-bottom: 1px solid #584237; height: 64px; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; position: sticky; top: 0; z-index: 50;">
+        <div style="font-size: 24px; font-weight: 600; color: #ffb690;">Obsidian Flux</div>
+        <div style="display: flex; gap: 16px;">
+            <span class="material-symbols-outlined" style="color: #e0c0b1; cursor: pointer;">settings</span>
+            <span class="material-symbols-outlined" style="color: #e0c0b1; cursor: pointer;">help</span>
+            <span class="material-symbols-outlined" style="color: #e0c0b1; cursor: pointer;">account_circle</span>
+        </div>
+    </header>
+    <!-- Dashboard Canvas -->
+    <div class="content-area">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+            <div>
+                <h1 style="font-size: 24px; font-weight: 600; margin: 0 0 4px 0;">Genel Bakış</h1>
+                <p style="color: #a1a1aa; font-size: 14px; margin: 0;">Sistem performansı ve metrikler</p>
+            </div>
+        </div>
+        <!-- Stats Row -->
+        <div class="stat-grid">
+            <div class="card">
+                <div class="card-header">
+                    <span style="font-size: 14px; color: #a1a1aa;">Toplam / Aktif Kullanıcılar</span>
+                    <span class="material-symbols-outlined" style="color: #f97316;">group</span>
+                </div>
+                <div style="font-size: 32px; font-weight: 700; color: #e5e2e1;"> @Model.TotalUserCount <span style="font-size: 14px; font-weight: 400; color: #a1a1aa;">/ @Model.ActiveUserCount</span></div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span style="font-size: 14px; color: #a1a1aa;">Mesajlar (Toplam / Bugün)</span>
+                    <span class="material-symbols-outlined" style="color: #f97316;">mail</span>
+                </div>
+                <div style="font-size: 32px; font-weight: 700; color: #e5e2e1;">1.2M <span style="font-size: 14px; font-weight: 400; color: #a1a1aa;">/ 42.1K</span></div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span style="font-size: 14px; color: #a1a1aa;">Okunmamış Mesajlar</span>
+                    <span class="material-symbols-outlined" style="color: #f97316;">mark_email_unread</span>
+                </div>
+                <div style="font-size: 32px; font-weight: 700; color: #e5e2e1;">@Model.UnReadMessageCount</div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span style="font-size: 14px; color: #a1a1aa;">Çöp Kutusu Sayısı</span>
+                    <span class="material-symbols-outlined" style="color: #f97316;">delete</span>
+                </div>
+                <div style="font-size: 32px; font-weight: 700; color: #e5e2e1;">@Model.TrackCount</div>
+            </div>
+        </div>
+        <!-- Data Row -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+            <!-- Top Senders -->
+            <div class="card">
+                <div class="card-header">
+                    <div style="font-size: 18px; font-weight: 600;">En Çok Gönderenler</div>
+                    <a href="/Admin/User/Index" style="background: none; border: 1px solid #333; color: #e5e2e1; padding: 4px 12px; border-radius: 4px; font-size: 12px; cursor: pointer;">Tümünü Gör</a>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Kullanıcı</th>
+                                <th>Mesaj Sayısı</th>
+                                <th>Durum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(var item in Model.UserMessages)
+                            {
+                                <tr>
+                                    <td style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="width: 32px; height: 32px; border-radius: 16px; background-color: #2a2a2a; display: flex; justify-content: center; align-items: center; font-size: 12px; font-weight: 600;">M</div>
+                                        <div style="display: flex; flex-direction: column;">
+                                            <span style="font-size: 14px; color: #e5e2e1;">@item.Name</span>
+                                            
+                                        </div>
+                                    </td>
+                                    <td style="font-size: 14px;">@item.TotalCount</td>
+                                    <td><span class="pill pill-primary">@item.IsActive</span></td>
+                                </tr>
+                            }
+                           
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Top Categories -->
+            <div class="card">
+                <div class="card-header">
+                    <div style="font-size: 18px; font-weight: 600;">En Popüler Kategoriler</div>
+                </div>
+                <div class="chart-placeholder">
+                    <div class="bar" style="height: 80%;"></div>
+                    <div class="bar" style="height: 60%;"></div>
+                    <div class="bar" style="height: 40%;"></div>
+                    <div class="bar" style="height: 30%;"></div>
+                    <div class="bar" style="height: 20%;"></div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+                   @foreach(var item in Model.Categories)
+                    {
+                        <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                            <span style="display: flex; align-items: center; gap: 8px;"><div style="width: 8px; height: 8px; border-radius: 4px; background-color: #ffb690;"></div> @item.Name</span>
+                            <span style="color: #a1a1aa;">@item.TotalCount</span>
+                        </div>
+                    }
+                  
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+

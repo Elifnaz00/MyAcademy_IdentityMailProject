@@ -1,0 +1,517 @@
+﻿@model UserMessage
+
+@{
+    ViewData["Title"] = "MailDetail";
+    Layout = "_UserLayout";
+}
+
+<main class="content-area">
+
+    <!-- TOOLBAR -->
+    <div class="mail-toolbar">
+
+        <button type="button" class="btn-back font-label-md">
+            <span class="material-symbols-outlined">arrow_back</span>
+            Back to Inbox
+        </button>
+
+        <div class="mail-actions">
+
+            <button type="button" class="icon-btn muted danger" title="Delete">
+                <span class="material-symbols-outlined">delete</span>
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- MAIL CONTENT -->
+    <div class="mail-detail">
+
+        <!-- SUBJECT -->
+        <div class="mail-title">
+            <h2 class="font-display-lg text-on-surface">
+                Q3 Infrastructure Review &amp; Updates
+            </h2>
+        </div>
+
+
+        <!-- SENDER CARD -->
+        <div class="email-header-card">
+
+            <div class="sender-info">
+
+                <div class="sender-icon">
+                    <span class="material-symbols-outlined">dns</span>
+                </div>
+
+                <div class="sender-details">
+
+                    <div class="sender-name-row">
+
+                        <span class="font-headline-sm text-on-surface">
+                            DataStore Systems Inc.
+                        </span>
+
+                        <span class="font-caption text-on-surface-muted">
+                            &lt;ops@datastoresystems.com&gt;
+                        </span>
+
+                    </div>
+
+                    <div class="font-caption text-on-surface-muted mt-1">
+                        to me, team-ops, lead-devs
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="mail-date">
+
+                <span class="font-caption text-on-surface-muted">
+                    Oct 24, 2023, 14:32 PM
+                </span>
+
+                <div class="mail-priority">
+
+                    <span class="material-symbols-outlined">
+                        priority_high
+                    </span>
+
+                    <span class="font-label-md text-uppercase">
+                        Urgent
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- MAIL BODY -->
+        <div class="email-body font-body-md text-on-surface">
+
+            <p>Team,</p>
+
+            <p>
+                As discussed in last week's sync, we are proceeding with the Q3
+                infrastructure migration this weekend. The primary objective is
+                transitioning our legacy database clusters to the new distributed
+                architecture to improve latency and failover capabilities across regions.
+            </p>
+
+            <p>
+                Please review the attached technical documentation for specifics on
+                the new endpoint configurations and update your service environment
+                variables accordingly before end-of-day Friday.
+            </p>
+
+            <p class="m-0">
+                Best,<br />
+                Operations Team
+            </p>
+
+        </div>
+
+
+        <!-- PREVIOUS REPLY -->
+        <div class="sent-reply">
+
+            <div class="sent-reply-header">
+
+                <span class="font-headline-sm text-on-surface">
+                    Alex Mercer
+                </span>
+
+                <span class="font-caption text-on-surface-muted">
+                    Oct 24, 2023, 15:10 PM
+                </span>
+
+            </div>
+
+            <p class="font-body-md text-on-surface m-0">
+                Anlaşıldı, geçiş planını inceledim ve ekiplerle paylaştım.
+            </p>
+
+        </div>
+
+
+        <!-- QUICK REPLY -->
+        <div class="reply-section">
+
+            <label class="font-label-md text-on-surface-muted text-uppercase">
+                Quick Reply
+            </label>
+
+            <textarea class="search-input font-body-md reply-input"
+                      placeholder="Type your reply here..."></textarea>
+
+            <div class="reply-footer">
+
+                <button type="button" class="btn-new font-label-md send-button">
+
+                    <span class="material-symbols-outlined">
+                        send
+                    </span>
+
+                    Send
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<style>
+
+    /* ==============================
+           MAIN MAIL AREA
+           ============================== */
+
+    .content-area {
+        width: 100%;
+        height: calc(100vh - 64px);
+        padding: 88px 32px 40px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        box-sizing: border-box;
+    }
+
+
+    /* ==============================
+           TOOLBAR
+           ============================== */
+
+    .mail-toolbar {
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 42px;
+    }
+
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border: none;
+        background: transparent;
+        color: var(--on-surface-muted);
+        cursor: pointer;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+
+
+        .btn-back:hover {
+            background-color: var(--surface-container-high);
+            color: var(--on-surface);
+        }
+
+
+        .btn-back .material-symbols-outlined {
+            font-size: 20px;
+        }
+
+
+    .mail-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+
+    .icon-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background: transparent;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+
+        .icon-btn.muted {
+            color: var(--on-surface-muted);
+        }
+
+
+        .icon-btn:hover {
+            background-color: var(--surface-container-high);
+            color: var(--on-surface);
+        }
+
+
+        .icon-btn.danger:hover {
+            color: var(--error);
+            background-color: rgba(255, 180, 171, 0.08);
+        }
+
+
+    /* ==============================
+           MAIL DETAIL
+           ============================== */
+
+    .mail-detail {
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+
+    /* ==============================
+           SUBJECT
+           ============================== */
+
+    .mail-title {
+        margin-bottom: 22px;
+    }
+
+
+        .mail-title h2 {
+            margin: 0;
+            line-height: 1.3;
+        }
+
+
+    /* ==============================
+           SENDER CARD
+           ============================== */
+
+    .email-header-card {
+        width: 100%;
+        min-height: 82px;
+        padding: 18px 20px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        background-color: var(--surface-container-low);
+        border: 1px solid var(--outline-dark);
+        border-radius: 12px;
+    }
+
+
+    .sender-info {
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+
+    .sender-icon {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background-color: var(--surface-container-high);
+        color: var(--primary-container);
+    }
+
+
+    .sender-details {
+        min-width: 0;
+    }
+
+
+    .sender-name-row {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+
+    .mail-date {
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+
+    .mail-priority {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 4px;
+        margin-top: 4px;
+        color: var(--primary-container);
+    }
+
+
+        .mail-priority .material-symbols-outlined {
+            font-size: 16px;
+        }
+
+
+    /* ==============================
+           MAIL BODY
+           ============================== */
+
+    .email-body {
+        width: 100%;
+        padding: 32px 20px;
+        box-sizing: border-box;
+        line-height: 1.8;
+    }
+
+
+        .email-body p {
+            margin-bottom: 20px;
+        }
+
+
+            .email-body p:last-child {
+                margin-bottom: 0;
+            }
+
+
+    /* ==============================
+           SENT REPLY
+           ============================== */
+
+    .sent-reply {
+        width: 100%;
+        box-sizing: border-box;
+        margin: 4px 0 0;
+        padding: 16px 20px;
+        border-left: 2px solid var(--primary-container);
+        background-color: var(--surface-container-low);
+        border-radius: 0 8px 8px 0;
+    }
+
+
+    .sent-reply-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+
+
+    /* ==============================
+           QUICK REPLY
+           ============================== */
+
+    .reply-section {
+        width: 100%;
+        margin-top: 28px;
+        padding: 24px 20px 0;
+        box-sizing: border-box;
+        border-top: 1px solid var(--outline-dark);
+    }
+
+
+        .reply-section > label {
+            margin-bottom: 10px;
+            display: block;
+        }
+
+
+    .reply-input {
+        width: 100%;
+        height: 120px;
+        padding: 12px 16px;
+        resize: none;
+        box-sizing: border-box;
+    }
+
+
+    .reply-footer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin-top: 12px;
+    }
+
+
+    .send-button {
+        width: auto;
+        padding: 8px 24px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+
+    /* ==============================
+           RESPONSIVE
+           ============================== */
+
+    @@media (max-width: 768px) {
+
+        .content-area {
+            padding: 80px 16px 32px;
+        }
+
+
+        .mail-toolbar {
+            margin-bottom: 20px;
+        }
+
+
+        .mail-detail {
+            max-width: 100%;
+        }
+
+
+        .email-header-card {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+
+        .mail-date {
+            width: 100%;
+            align-items: flex-start;
+        }
+
+
+        .mail-priority {
+            justify-content: flex-start;
+        }
+
+
+        .email-body {
+            padding: 24px 8px;
+        }
+
+
+        .sent-reply {
+            padding: 14px 16px;
+        }
+
+
+        .reply-section {
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+    }
+
+</style>

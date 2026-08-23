@@ -1,0 +1,173 @@
+﻿@model List<UserMessage>
+@{
+    ViewData["Title"] = "Trash";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+
+<main class="main-content">
+
+    <!-- Header / Filters -->
+    <div class="page-header">
+        <div>
+            <h2 class="page-title">
+                Çöp Kutusu
+            </h2>
+        </div>
+
+        <div class="search-container d-none d-md-block ">
+
+            <span class="material-symbols-outlined search-icon">
+                search
+            </span>
+
+            <input class="search-input"
+                   placeholder="Çöp kutusunda ara..."
+                   type="text" />
+
+
+
+        </div>
+        <div class="d-flex gap-2">
+
+            <button class="filter-btn">
+                <span class="material-symbols-outlined" style="font-size: 18px;">
+                    filter_list
+                </span>
+                Filtrele
+            </button>
+
+            <button class="filter-btn">
+                <span class="material-symbols-outlined" style="font-size: 18px;">
+                    sort
+                </span>
+                Sırala
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Email List -->
+    <div class="email-list custom-scrollbar">
+
+        @foreach (var item in Model)
+        {
+            <div class="email-item email-unread">
+
+                <div class="unread-indicator-bar"></div>
+
+                <!-- Email Header -->
+                <div class="email-header">
+
+                    <!-- Sender -->
+                    <div class="email-sender">
+
+                        <div class="unread-dot"></div>
+
+                        <span class="sender-name">
+                            @item.Sender.FirstName @item.Sender.LastName
+                        </span>
+
+                    </div>
+
+
+                    <!-- Right Side -->
+                    <div class="email-actions">
+
+                        <span class="email-time">
+                            @item.SendDate.ToString("dd.MM.yyyy HH:mm")
+                        </span>
+
+                        
+                        <a href="/Message/Restore/@item.Id" class="btn btn-warning">
+                            Çöpten Geri Al
+                        </a>
+                        <a href="/Message/Delete/@item.Id" class="btn btn-danger">
+                            Tamamen Sil
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Email Body -->
+                <div class="email-body">
+
+                    <h3 class="email-subject">
+                        @item.Subject
+                    </h3>
+
+                    <p class="email-preview">
+                        @item.Body
+                    </p>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</main>
+
+
+<style>
+
+    /* Mail üst sağ taraf */
+    .email-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+
+    /* Tarih */
+    .email-time {
+        display: block;
+        min-width: 125px;
+        text-align: right;
+        white-space: nowrap;
+    }
+
+
+    /* Sil butonu */
+    .delete-btn {
+        flex-shrink: 0;
+        transition: all 0.2s ease;
+    }
+
+
+        .delete-btn:hover {
+            color: var(--error) !important;
+            background-color: rgba(255, 180, 171, 0.1) !important;
+        }
+
+
+    /* Mail header hizalama */
+    .email-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+    }
+
+
+    /* Mobil */
+    @@media (max-width: 768px) {
+
+        .email-actions {
+            gap: 4px;
+        }
+
+        .email-time {
+            min-width: auto;
+            font-size: 11px;
+        }
+    }
+
+</style>
+

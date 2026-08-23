@@ -1,0 +1,142 @@
+﻿@using IdentityMail.Web.DTOs.ProfileDtos
+@model UpdateProfileDto
+@{
+    ViewData["Title"] = "EditProfile";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+@{
+    ViewData["Title"] = "Profil Güncelle";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<main class="main-content">
+
+    <div class="profile-form-card">
+
+        <div class="profile-form-header">
+            <h2>Profil Bilgilerini Güncelle</h2>
+            <p>Profil bilgilerinizi ve profil fotoğrafınızı güncelleyebilirsiniz.</p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data">
+
+            <!-- PROFİL FOTOĞRAFI -->
+            <div class="profile-photo-section">
+
+                <div class="current-profile-photo">
+                    <img src="https://via.placeholder.com/120"
+                         alt="Profil Fotoğrafı"
+                         id="profilePreview">
+                </div>
+
+                <div class="profile-photo-content">
+
+                    <h5>Profil Fotoğrafı</h5>
+
+                    <p>
+                        Profil fotoğrafınızı değiştirmek için yeni bir fotoğraf seçin.
+                    </p>
+
+                    <label for="profileImage" class="photo-upload-button">
+                        <span class="material-symbols-outlined">
+                            upload
+                        </span>
+                        Fotoğraf Seç
+                    </label>
+
+                    <input type="file"
+                           id="profileImage"
+                           name="ProfileImage"
+                           accept="image/*"
+                           hidden />
+
+                </div>
+
+            </div>
+
+
+            <!-- AD SOYAD -->
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Ad
+                    </label>
+
+                    <input type="text"
+                           class="form-control theme-input"
+                           name="Name"
+                           placeholder="Adınız" />
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Soyad
+                    </label>
+
+                    <input type="text"
+                           class="form-control theme-input"
+                           name="Surname"
+                           placeholder="Soyadınız" />
+
+                </div>
+
+            </div>
+
+
+            <!-- KULLANICI ADI -->
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Kullanıcı Adı
+                </label>
+
+                <input type="text"
+                       class="form-control theme-input"
+                       name="Username"
+                       placeholder="Kullanıcı adınız" />
+
+            </div>
+
+
+            <!-- E-POSTA -->
+            <div class="mb-4">
+
+                <label class="form-label">
+                    E-posta
+                </label>
+
+                <input type="email"
+                       class="form-control theme-input"
+                       name="Email"
+                       placeholder="E-posta adresiniz" />
+
+            </div>
+
+
+            <!-- BUTON -->
+            <div class="text-end">
+
+                <button type="submit"
+                        class="btn theme-button">
+
+                    <span class="material-symbols-outlined">
+                        save
+                    </span>
+
+                    Değişiklikleri Kaydet
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</main>
+

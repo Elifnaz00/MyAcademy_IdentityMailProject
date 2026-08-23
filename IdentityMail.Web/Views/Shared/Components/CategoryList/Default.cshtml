@@ -1,0 +1,41 @@
+﻿@model List<Category>
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="lg:col-span-8">
+    <div class="bg-surface-container-low border border-outline-dark rounded-xl overflow-hidden shadow-sm">
+        <!-- Table Header -->
+        <div class="px-6 py-4 border-b border-outline-dark bg-surface-container-highest/30 flex justify-between items-center">
+            <h3 class="font-headline-sm text-headline-sm text-on-surface">Mevcut Kategoriler</h3>
+            <span class="bg-surface-container-highest text-on-surface-muted font-caption text-caption px-2 py-1 rounded">Toplam: @ViewBag.CategoryCount </span>
+        </div>
+        <!-- Category List -->
+        <div class="divide-y divide-outline-dark">
+            @foreach(var item in Model)
+            {
+                <div class="px-6 py-4 flex items-center justify-between hover:bg-surface-container-high transition-colors group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-2 h-2 rounded-full bg-[#a855f7]"></div>
+                        <div class="flex flex-col">
+                            <span class="font-body-md text-body-md text-on-surface font-semibold">@item.Name</span>
+                            <span class="font-caption text-caption text-on-surface-muted">89 ileti</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <a href="/Category/Update/@item.Id" class="p-1.5 text-on-surface hover:text-primary hover:bg-surface-container-highest rounded border border-transparent hover:border-outline-dark transition-all" title="Düzenle">
+                            <span class="material-symbols-outlined text-[20px]">edit</span>
+                        </a>
+
+                        <a href="/Category/Delete/@item.Id" class="p-1.5 text-on-surface hover:text-primary hover:bg-surface-container-highest rounded border border-transparent hover:border-outline-dark transition-all" title="Sil">
+                            <span class="material-symbols-outlined text-[20px]">delete</span>
+                        </a>
+                    </div>
+                </div>
+            }
+           
+        </div>
+    </div>
+</div>

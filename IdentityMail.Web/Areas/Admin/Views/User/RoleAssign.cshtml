@@ -1,0 +1,65 @@
+﻿@model IdentityMail.Web.Areas.Admin.Models.RoleAssignViewModel
+@{
+    ViewData["Title"] = "RoleAssign";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<main class="flex-1 md:ml-sidebar-width h-[calc(100vh-64px)] md:h-screen overflow-y-auto bg-background relative flex flex-col items-center justify-center p-4">
+    <!-- Subtle background texture/pattern -->
+    <div class="absolute inset-0 pointer-events-none opacity-[0.03] z-0" style="background-image: radial-gradient(#f97316 1px, transparent 1px); background-size: 32px 32px;"></div>
+    <!-- Role Assignment Card -->
+    <div class="w-full max-w-md bg-surface-container-low border border-outline-dark rounded-xl p-8 z-10 relative shadow-2xl backdrop-blur-sm">
+        <!-- Glow effect behind card -->
+        <div class="absolute -inset-1 bg-gradient-to-r from-primary/10 to-transparent rounded-2xl blur-lg -z-10 pointer-events-none opacity-50"></div>
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 bg-surface-container-high rounded-full mx-auto flex items-center justify-center border border-outline-dark mb-4 shadow-[0_0_20px_rgba(249,115,22,0.1)]">
+                <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">badge</span>
+            </div>
+            <h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-2">Rol Atama</h2>
+            <p class="font-body-md text-body-md text-on-surface-muted">Kullanıcı yetkilerini güvenle yönetin.</p>
+        </div>
+        <!-- Form -->
+        <form class="space-y-6" asp-area="Admin" method="post" asp-controller="User" asp-action="RoleAssign">
+            <!-- User Select -->
+            <div class="space-y-2">
+                <label class="block font-label-md text-label-md text-on-surface-muted" for="user-select">Kullanıcı Seçin</label>
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="material-symbols-outlined text-on-secondary-container group-focus-within:text-primary transition-colors text-sm">person</span>
+                    </div>
+                    <select asp-items="@ViewBag.UserList"
+                            asp-for="UserName"
+                            class="block w-full pl-10 pr-10 py-3 bg-background border border-outline-dark rounded-lg font-body-md text-body-md text-on-surface"
+                            id="user-select">
+                        <option value="">Bir kullanıcı seçin...</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Role Select -->
+            <div class="space-y-2">
+                <label class="block font-label-md text-label-md text-on-surface-muted" for="role-select">Rol Atayın</label>
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="material-symbols-outlined text-on-secondary-container group-focus-within:text-primary transition-colors text-sm">admin_panel_settings</span>
+                    </div>
+                    <select asp-items="@ViewBag.RoleList"
+                            asp-for="RoleName"
+                            class="block w-full pl-10 pr-10 py-3 bg-background border border-outline-dark rounded-lg font-body-md text-body-md text-on-surface"
+                            id="role-select">
+                        <option value="">Bir rol seçin...</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Submit Button -->
+            <div class="pt-4">
+                <button class="w-full bg-primary-container text-[#131313] hover:bg-primary-container/90 active:scale-95 transition-all duration-200 py-3 px-4 rounded-lg font-headline-sm text-headline-sm flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(249,115,22,0.2)]" type="submit">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">security_update_good</span>
+                    Rolü Güncelle
+                </button>
+            </div>
+        </form>
+      
+    </div>
+</main>
+

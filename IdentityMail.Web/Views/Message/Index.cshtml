@@ -1,0 +1,365 @@
+﻿@model PagedList.Core.IPagedList<UserMessage>
+
+@{
+    ViewData["Title"] = "Gelen Kutusu";
+    Layout = "_UserLayout";
+}
+
+<main class="main-content">
+
+    <!-- Header / Filters -->
+    <!-- Header / Filters -->
+    <div class="page-header">
+
+        <div>
+            <h2 class="page-title">
+                Gelen Kutusu
+            </h2>
+        </div>
+
+        <!-- Search -->
+        <form asp-controller="Message" asp-action="Index" method="get" class="search-container d-none d-md-block">
+
+           
+            <input class="search-input"
+                   placeholder="Gelen kutusunda ara..."
+                   name="search"
+                   type="text" />
+
+        </form>
+
+        <!-- Filter Button -->
+        <button type="button"
+                class="filter-btn"
+                id="filterToggle">
+
+            <span class="material-symbols-outlined" style="font-size: 18px;">
+                filter_list
+            </span>
+
+            Filtrele
+        </button>
+
+    </div>
+
+
+    <!-- Filter Panel -->
+    <div class="filter-panel" id="filterPanel">
+
+        <form asp-controller="Message"
+              asp-action="Index"
+              method="get"
+              class="filter-form">
+
+            <!-- Read Status -->
+            <div class="filter-group">
+
+                <label>Okunma Durumu</label>
+
+                <select name="isRead" class="filter-input">
+                    <option value="">Tüm Mesajlar</option>
+                    <option value="true">Okunan</option>
+                    <option value="false">Okunmayan</option>
+                </select>
+
+            </div>
+
+
+            <!-- Importance -->
+            <div class="filter-group">
+
+                <label>Önem</label>
+
+                <select name="isImportant" class="filter-input">
+                    <option value="">Tümü</option>
+                    <option  value="true">Önemli</option>
+                    <option value="false">Normal</option>
+                </select>
+
+            </div>
+
+
+            <!-- Sort -->
+            <div class="filter-group">
+
+                <label>Sıralama</label>
+
+                <select name="sortOrder" class="filter-input">
+                    <option value="new">Yeni → Eski</option>
+                    <option value="old">Eski → Yeni</option>
+                </select>
+
+            </div>
+
+
+            <!-- Apply -->
+            <button type="submit" class="filter-apply-btn">
+                Filtrele
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- Email List -->
+    <div class="email-list custom-scrollbar">
+
+        @foreach (var item in Model)
+        {
+            <div class="email-item email-unread">
+
+                <div class="unread-indicator-bar"></div>
+
+                <!-- Email Header -->
+                <div class="email-header">
+
+                    <!-- Sender -->
+                    <div class="email-sender">
+
+                        <div class="unread-dot"></div>
+
+                        <span class="sender-name">
+                            @item.Sender.FirstName @item.Sender.LastName
+                        </span>
+
+                    </div>
+
+
+                    <!-- Right Side -->
+                    <div class="email-actions">
+
+                        <span class="email-time">
+                            @item.SendDate.ToString("dd.MM.yyyy HH:mm")
+                        </span>
+
+
+                        <a href="/Message/ToggleImportant/@item.Id"
+                           class="nav-btn important-btn @(item.IsImportant ? "important-active" : "")">
+
+                            <span class="material-symbols-outlined">
+                                @(item.IsImportant ? "star" : "star_border")
+                            </span>
+
+                        </a>
+
+                        <a href="/Message/MoveToTrash/@item.Id" class="nav-btn delete-btn">
+                             
+                            <span class="material-symbols-outlined">
+                                delete
+                            </span>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Email Body -->
+                <div class="email-body">
+
+                    <h3 class="email-subject">
+                        @item.Subject
+                    </h3>
+
+                    <p class="email-preview">
+                        @item.Body
+                    </p>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+    <div class="d-flex justify-content-center mt-4 pagination-container">
+        <pager list="@Model"
+               asp-controller="Message"
+               asp-action="Index" />
+    </div>
+</main>
+
+
+<style>
+
+    /* Mail üst sağ taraf */
+    .email-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+
+    /* Tarih */
+    .email-time {
+        display: block;
+        min-width: 125px;
+        text-align: right;
+        white-space: nowrap;
+    }
+
+
+    /* Sil butonu */
+    .delete-btn {
+        flex-shrink: 0;
+        transition: all 0.2s ease;
+    }
+
+
+        .delete-btn:hover {
+            color: var(--error) !important;
+            background-color: rgba(255, 180, 171, 0.1) !important;
+        }
+
+
+    /* Mail header hizalama */
+    .email-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+    }
+
+
+    /* Mobil */
+    @@media (max-width: 768px) {
+
+        .email-actions {
+            gap: 4px;
+        }
+
+        .email-time {
+            min-width: auto;
+            font-size: 11px;
+        }
+    }
+
+    /* Header */
+    .page-header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    /* Search alanı */
+    .search-container {
+        position: relative;
+        flex: 1;
+        max-width: 400px;
+    }
+
+    /* Filtre paneli */
+    .filter-panel {
+        display: none;
+        margin-top: 16px;
+        padding: 20px;
+        background: var(--surface-container-low);
+        border-radius: 12px;
+    }
+
+        /* Panel açıldığında */
+        .filter-panel.active {
+            display: block;
+        }
+
+    /* Filtreler */
+    .filter-form {
+        display: flex;
+        align-items: end;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+        .filter-group label {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+    .filter-input {
+        min-width: 150px;
+        height: 40px;
+        padding: 0 10px;
+        border-radius: 8px;
+        border: 1px solid var(--outline);
+        background: var(--surface);
+    }
+
+    /* Filtrele butonu */
+    .filter-apply-btn {
+        height: 40px;
+        padding: 0 18px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    /* Mobil */
+    @@media (max-width: 768px) {
+
+        .page-header {
+            align-items: stretch;
+        }
+
+        .search-container {
+            max-width: none;
+            width: 100%;
+        }
+
+        .filter-form {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .filter-input {
+            width: 100%;
+        }
+
+        .filter-apply-btn {
+            width: 100%;
+        }
+    }
+
+    .pagination-container {
+        margin-top: auto !important;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .email-list {
+        min-height: 450px;
+    }
+
+    .important-btn {
+        flex-shrink: 0;
+        transition: all 0.2s ease;
+    }
+
+        .important-btn:hover {
+            color: #f5b301 !important;
+            background-color: rgba(245, 179, 1, 0.1) !important;
+        }
+
+    .important-active {
+        color: #f5b301 !important;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.getElementById("filterToggle").addEventListener("click", function () {
+
+            document.getElementById("filterPanel")
+                .classList.toggle("active");
+
+        });
+    </script>
+}

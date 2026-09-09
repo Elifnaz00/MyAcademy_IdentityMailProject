@@ -1,0 +1,61 @@
+﻿@using IdentityMail.Web.Entities
+@model List<UserMessage>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<main class="main-content">
+
+
+    <div style="display: grid; gap: 24px;">
+        <!-- Top Senders -->
+        <div class="card">
+            <div class="card-header">
+                <div style="font-size: 18px; font-weight: 600;">Şikayetler</div>
+                
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Gönderen</th>
+                            <th>Alıcı</th>
+                            <th>Mesaj </th>
+                            <th>Gönderim Tarihi </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td style="">
+                                   
+                                    <div style="display: flex; flex-direction: column;">
+                                        <span style="font-size: 14px; color: #e5e2e1;">@item.Sender.Email</span>
+
+                                    </div>
+                                </td>
+                                <td style="">
+                                 
+                                    <div style="display: flex; flex-direction: column;">
+                                        <span style="font-size: 14px; color: #e5e2e1;">@item.Receiver.Email</span>
+
+                                    </div>
+                                </td>
+                                
+                                <td><span class="pill pill-primary">@item.Body</span></td>
+                                <td><span style="font-size: 14px;color: #e5e2e1">@item.SendDate.ToString("dd.MM.yyyy HH:mm")</span></td>
+                                <td><a class="btn btn-warning" href="/Admin/ComplaintDetail/@item.Id">Mesaj Detay</a></td>
+                            </tr>
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+       
+    </div>
+
+</main>

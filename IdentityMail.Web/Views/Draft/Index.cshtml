@@ -1,11 +1,8 @@
 ﻿@model List<UserMessage>
 @{
-    ViewData["Title"] = "SentMessages";
+    ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_UserLayout.cshtml";
 }
-
-
-
 
 <main class="main-content">
 
@@ -13,7 +10,7 @@
     <div class="page-header">
         <div>
             <h2 class="page-title">
-                Gönderilenler
+                Taslaklar
             </h2>
         </div>
 
@@ -24,7 +21,7 @@
             </span>
 
             <input class="search-input"
-                   placeholder="Gönderilenler mesajlar arasında ara..."
+                   placeholder="Taslaklarda Ara..."
                    type="text" />
 
 
@@ -69,7 +66,7 @@
                         <div class="unread-dot"></div>
 
                         <span class="sender-name">
-                            @item.Sender.FirstName @item.Sender.LastName
+                            @item.Receiver.FirstName @item.Receiver.LastName
                         </span>
 
                     </div>
@@ -82,14 +79,13 @@
                             @item.SendDate.ToString("dd.MM.yyyy HH:mm")
                         </span>
 
-                        <a href="/Message/MoveToTrash/@item.Id" class="nav-btn delete-btn">
 
-                            <span class="material-symbols-outlined">
-                                delete
-                            </span>
-
+                        <a href="/Draft/Edit/@item.Id" class="btn btn-warning">
+                            Düzenle
                         </a>
-
+                        <a href="/Draft/Delete/@item.Id" class="btn btn-danger">
+                            Tamamen Sil
+                        </a>
 
                     </div>
 
@@ -173,4 +169,6 @@
     }
 
 </style>
+
+
 

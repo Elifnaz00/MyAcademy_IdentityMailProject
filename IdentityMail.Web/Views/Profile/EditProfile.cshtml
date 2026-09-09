@@ -1,9 +1,6 @@
 ﻿@using IdentityMail.Web.DTOs.ProfileDtos
 @model UpdateProfileDto
-@{
-    ViewData["Title"] = "EditProfile";
-    Layout = "~/Views/Shared/_UserLayout.cshtml";
-}
+
 
 @{
     ViewData["Title"] = "Profil Güncelle";
@@ -19,7 +16,7 @@
             <p>Profil bilgilerinizi ve profil fotoğrafınızı güncelleyebilirsiniz.</p>
         </div>
 
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" asp-controller="Profile" ap-action="EditProfile">
 
             <!-- PROFİL FOTOĞRAFI -->
             <div class="profile-photo-section">
@@ -67,7 +64,8 @@
 
                     <input type="text"
                            class="form-control theme-input"
-                           name="Name"
+                           name="FirstName"
+                           value=@Model.FirstName
                            placeholder="Adınız" />
 
                 </div>
@@ -80,8 +78,9 @@
 
                     <input type="text"
                            class="form-control theme-input"
-                           name="Surname"
-                           placeholder="Soyadınız" />
+                           name="LastName"
+                           value=@Model.LastName
+                           />
 
                 </div>
 
@@ -98,7 +97,7 @@
                 <input type="text"
                        class="form-control theme-input"
                        name="Username"
-                       placeholder="Kullanıcı adınız" />
+                       value=@Model.UserName />
 
             </div>
 
@@ -113,7 +112,7 @@
                 <input type="email"
                        class="form-control theme-input"
                        name="Email"
-                       placeholder="E-posta adresiniz" />
+                       value=@Model.Email />
 
             </div>
 

@@ -1,0 +1,77 @@
+﻿@using IdentityMail.Web.DTOs.DraftDtos
+@model DraftMailDto
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<main class="main-content">
+
+    <div class="profile-form-card">
+
+        <div class="profile-form-header">
+            <h2>Taslak Düzenle</h2>
+
+        </div>
+
+        <form method="post" asp-controller="Draft" asp-action="Edit">
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Alıcı Mail
+                </label>
+
+                <input type="text"
+                       class="form-control theme-input"
+                       name="ReceiverEmail"
+                       asp-for="ReceiverEmail" 
+                       />
+
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">
+                    Konu
+                </label>
+
+                <input type="text"
+                       class="form-control theme-input"
+                       name="Subject"
+                       asp-for="Subject"
+                       placeholder="En fazla 100 karakter giriniz." />
+
+            </div>
+            <div class="mb-4">
+
+                <label class="form-label">
+                    Mesaj İçeriği
+                </label>
+
+                <textarea class="form-control theme-input"
+                          name="Body"
+                          asp-for="Body"
+                          placeholder="En fazla 300 karakter giriniz.">
+                      </textarea>
+
+            </div>
+
+
+            <span class="text-danger">@Html.ValidationSummary()</span>
+            <div class="text-end">
+
+                <button type="submit"
+                        class="btn theme-button">
+
+                    Taslağı Gönder
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</main>
+

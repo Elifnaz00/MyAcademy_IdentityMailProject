@@ -59,7 +59,7 @@ namespace IdentityMail.Web.Controllers
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
-            if (user==null)
+            if (user is null)
             {
                 ModelState.AddModelError(string.Empty, "Bu Email sistemde kayıtlı değil.");
                 return View(loginDto);

@@ -15,7 +15,7 @@ namespace IdentityMail.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var categoryList= await _dbContext.Categories.AsNoTracking().ToListAsync();
+            var categoryList= await _dbContext.Categories.AsNoTracking().Where(x=>x.IsActive).ToListAsync();
             var count= categoryList.Count;
             ViewBag.CategoryCount= count;
             return View(categoryList);

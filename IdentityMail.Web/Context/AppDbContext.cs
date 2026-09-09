@@ -1,6 +1,7 @@
 ﻿using IdentityMail.Web.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace IdentityMail.Web.Context
 {
@@ -14,20 +15,27 @@ namespace IdentityMail.Web.Context
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<AppUser>()
-                .HasMany(message=> message.SentMessages)
-                .WithOne(x=> x.Sender)
-                .HasForeignKey(x=>x.SenderId).OnDelete(DeleteBehavior.Restrict);
-
-
-            builder.Entity<AppUser>()
-               .HasMany(message => message.ReceivedMessages)
-               .WithOne(x => x.Receiver)
-               .HasForeignKey(x => x.ReceiverId).OnDelete(DeleteBehavior.Restrict);
-
-
             base.OnModelCreating(builder);
+
+            builder.Entity<AppUser>()
+                .HasMany(x => x.SentMessages)
+                .WithOne(x => x.Sender)
+                .HasForeignKey(x => x.SenderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<AppUser>()
+                .HasMany(x => x.ReceivedMessages)
+                .WithOne(x => x.Receiver)
+                .HasForeignKey(x => x.ReceiverId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<UserMessage>()
+                .HasOne(x => x.ReplyToMessage)
+                .WithMany()
+                .HasForeignKey(x => x.ReplyToMessageId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         }
+        
 
         public DbSet<UserMessage> UserMessages { get; set; }
         public DbSet<Category> Categories { get; set; }

@@ -2,6 +2,9 @@
 {
     public class UserMessage
     {
+        public int? ReplyToMessageId { get; set; }
+        public UserMessage ReplyToMessage { get; set; }
+
         public int Id { get; set; }
         public string Subject { get; set; }
 
@@ -11,6 +14,8 @@
         public bool IsRead { get; set; }
 
         public bool IsImportant { get; set; }
+
+        public bool IsComplaint { get; set; }
 
         public bool IsDraft { get; set; }
         public bool IsDeleted { get; set; }

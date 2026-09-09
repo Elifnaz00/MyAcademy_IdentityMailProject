@@ -1,4 +1,5 @@
-﻿@model UserMessage
+﻿
+@model MailDetailDto
 
 @{
     ViewData["Title"] = "MailDetail";
@@ -10,30 +11,41 @@
     <!-- TOOLBAR -->
     <div class="mail-toolbar">
 
-        <button type="button" class="btn-back font-label-md">
+        <a href="/Message/MoveToTrash/@Model.UserMessage.Id" class="btn-back font-label-md">
             <span class="material-symbols-outlined">arrow_back</span>
-            Back to Inbox
-        </button>
+            Gelen Kutusuna Dön
+        </a>
 
         <div class="mail-actions">
 
-            <button type="button" class="icon-btn muted danger" title="Delete">
-                <span class="material-symbols-outlined">delete</span>
+            <button type="button"
+                    class="icon-btn muted danger"
+                    title="Delete">
+
+                <span class="material-symbols-outlined">
+                    delete
+                </span>
+
             </button>
+            <a href="/Message/Report/@Model.UserMessage.Id"class="btn-back btn-danger">
+                Şikayet Et
+            </a>
 
         </div>
 
     </div>
 
 
-    <!-- MAIL CONTENT -->
+    <!-- ANA MESAJ -->
     <div class="mail-detail">
 
         <!-- SUBJECT -->
         <div class="mail-title">
+
             <h2 class="font-display-lg text-on-surface">
-                Q3 Infrastructure Review &amp; Updates
+                @Model.UserMessage.Subject
             </h2>
+
         </div>
 
 
@@ -43,25 +55,36 @@
             <div class="sender-info">
 
                 <div class="sender-icon">
-                    <span class="material-symbols-outlined">dns</span>
+
+                    <span class="material-symbols-outlined">
+                        dns
+                    </span>
+
                 </div>
+
 
                 <div class="sender-details">
 
                     <div class="sender-name-row">
 
                         <span class="font-headline-sm text-on-surface">
-                            DataStore Systems Inc.
+
+                            @Model.UserMessage.Sender.FirstName
+                            @Model.UserMessage.Sender.LastName
+
                         </span>
 
+
                         <span class="font-caption text-on-surface-muted">
-                            &lt;ops@datastoresystems.com&gt;
+
+                            &lt;@Model.UserMessage.Sender.Email&gt;
+
                         </span>
 
                     </div>
 
+
                     <div class="font-caption text-on-surface-muted mt-1">
-                        to me, team-ops, lead-devs
                     </div>
 
                 </div>
@@ -72,20 +95,10 @@
             <div class="mail-date">
 
                 <span class="font-caption text-on-surface-muted">
-                    Oct 24, 2023, 14:32 PM
+
+                    @Model.UserMessage.SendDate
+
                 </span>
-
-                <div class="mail-priority">
-
-                    <span class="material-symbols-outlined">
-                        priority_high
-                    </span>
-
-                    <span class="font-label-md text-uppercase">
-                        Urgent
-                    </span>
-
-                </div>
 
             </div>
 
@@ -95,70 +108,114 @@
         <!-- MAIL BODY -->
         <div class="email-body font-body-md text-on-surface">
 
-            <p>Team,</p>
-
             <p>
-                As discussed in last week's sync, we are proceeding with the Q3
-                infrastructure migration this weekend. The primary objective is
-                transitioning our legacy database clusters to the new distributed
-                architecture to improve latency and failover capabilities across regions.
-            </p>
-
-            <p>
-                Please review the attached technical documentation for specifics on
-                the new endpoint configurations and update your service environment
-                variables accordingly before end-of-day Friday.
-            </p>
-
-            <p class="m-0">
-                Best,<br />
-                Operations Team
+                @Model.UserMessage.Body
             </p>
 
         </div>
 
+    </div>
 
-        <!-- PREVIOUS REPLY -->
-        <div class="sent-reply">
 
-            <div class="sent-reply-header">
+    <!-- ÖNCEDEN VERİLMİŞ CEVAPLAR -->
+    @if (Model.Messages != null && Model.Messages.Count > 0)
+    {
+        foreach (var item in Model.Messages)
+        {
+            <div class="sent-reply">
 
-                <span class="font-headline-sm text-on-surface">
-                    Alex Mercer
-                </span>
+                <div class="sent-reply-header">
 
-                <span class="font-caption text-on-surface-muted">
-                    Oct 24, 2023, 15:10 PM
-                </span>
+                    <span class="font-headline-sm text-on-surface">
+
+                        @item.Sender.FirstName
+                        @item.Sender.LastName
+
+                    </span>
+
+
+                    <span class="font-caption text-on-surface-muted">
+
+                        @item.SendDate
+
+                    </span>
+
+                </div>
+
+
+                <p class="font-body-md text-on-surface m-0">
+
+                    @item.Body
+
+                </p>
 
             </div>
-
-            <p class="font-body-md text-on-surface m-0">
-                Anlaşıldı, geçiş planını inceledim ve ekiplerle paylaştım.
-            </p>
-
-        </div>
+        }
+    }
 
 
-        <!-- QUICK REPLY -->
+    <!-- QUICK REPLY -->
+    <form method="post"
+          asp-action="Reply"
+          asp-controller="Message">
+
         <div class="reply-section">
 
+            <!-- Ana mesajın ID'si -->
+            <input type="hidden"
+                   name="ReplyToMessageId"
+                   value="@Model.UserMessage.Id" />
+
+
+            <!-- Ana mesajı gönderen kişinin ID'si -->
+            <input type="hidden"
+                   name="ReceiverId"
+                   value="@Model.UserMessage.SenderId" />
+
+
             <label class="font-label-md text-on-surface-muted text-uppercase">
-                Quick Reply
+
+                Hızlı Yanıt
+
             </label>
 
-            <textarea class="search-input font-body-md reply-input"
-                      placeholder="Type your reply here..."></textarea>
+
+            <input name="Subject"
+                   class="subject-input font-body-md"
+                   placeholder="Konuyu bu alana giriniz..." />
+
+
+            <br />
+            <br />
+
+
+            <textarea name="Body"
+                      class="search-input font-body-md reply-input"
+                      placeholder="Yanıtınızı bu alana giriniz..."></textarea>
+
+
+            <br />
+
+
+            <!-- VALIDATION MESSAGE -->
+            <div asp-validation-summary="All"
+                 class="text-danger">
+            </div>
+
+
+            <br />
+
 
             <div class="reply-footer">
 
-                <button type="button" class="btn-new font-label-md send-button">
+                <button type="submit"
+                        class="btn-new font-label-md send-button">
 
                     <span class="material-symbols-outlined">
                         send
                     </span>
 
-                    Send
+                    Gönder
 
                 </button>
 
@@ -166,7 +223,7 @@
 
         </div>
 
-    </div>
+    </form>
 
 </main>
 
@@ -174,8 +231,8 @@
 <style>
 
     /* ==============================
-           MAIN MAIL AREA
-           ============================== */
+               MAIN MAIL AREA
+               ============================== */
 
     .content-area {
         width: 100%;
@@ -188,8 +245,8 @@
 
 
     /* ==============================
-           TOOLBAR
-           ============================== */
+               TOOLBAR
+               ============================== */
 
     .mail-toolbar {
         width: 100%;
@@ -268,8 +325,8 @@
 
 
     /* ==============================
-           MAIL DETAIL
-           ============================== */
+               MAIL DETAIL
+               ============================== */
 
     .mail-detail {
         width: 100%;
@@ -279,8 +336,8 @@
 
 
     /* ==============================
-           SUBJECT
-           ============================== */
+               SUBJECT
+               ============================== */
 
     .mail-title {
         margin-bottom: 22px;
@@ -294,8 +351,8 @@
 
 
     /* ==============================
-           SENDER CARD
-           ============================== */
+               SENDER CARD
+               ============================== */
 
     .email-header-card {
         width: 100%;
@@ -370,8 +427,8 @@
 
 
     /* ==============================
-           MAIL BODY
-           ============================== */
+               MAIL BODY
+               ============================== */
 
     .email-body {
         width: 100%;
@@ -392,8 +449,8 @@
 
 
     /* ==============================
-           SENT REPLY
-           ============================== */
+               SENT REPLY
+               ============================== */
 
     .sent-reply {
         width: 100%;
@@ -415,8 +472,8 @@
 
 
     /* ==============================
-           QUICK REPLY
-           ============================== */
+               QUICK REPLY
+               ============================== */
 
     .reply-section {
         width: 100%;
@@ -461,8 +518,8 @@
 
 
     /* ==============================
-           RESPONSIVE
-           ============================== */
+               RESPONSIVE
+               ============================== */
 
     @@media (max-width: 768px) {
 

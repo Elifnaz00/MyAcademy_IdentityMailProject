@@ -1,8 +1,71 @@
-﻿
+﻿@model Category
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_UserLayout.cshtml";
 }
 
-<h1>Edit</h1>
+<main class="md:pl-[260px] pt-16 min-h-screen flex flex-col justify-between bg-background">
+    <div class="max-w-4xl w-full mx-auto px-gutter md:px-margin-lg py-8 md:py-12">
+        <!-- Breadcrumb Navigation -->
+        <nav aria-label="Geçiş Yolu" class="flex items-center gap-2 text-on-surface-muted font-caption text-caption mb-6">
+            <a class="hover:text-on-surface transition-colors flex items-center gap-1" href="#">
+                <span class="material-symbols-outlined text-[14px]" data-icon="folder">folder</span>
+                <span>Kategoriler</span>
+            </a>
+            <span class="text-on-surface-muted">/</span>
+            <span class="text-primary-container font-medium">Kategori Düzenle</span>
+        </nav>
+        <!-- Edit Card (Clean Darkroom Modern Minimalist Bento) -->
+        <div class="bg-surface-container-low border border-outline-dark rounded-xl p-6 md:p-8 backdrop-blur-md relative overflow-hidden">
+            <!-- Subtle Active Ember Accent Top Edge Indicator -->
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-container via-primary-container/40 to-transparent"></div>
+            <!-- Header of the Card -->
+            <div class="flex items-start justify-between pb-6 border-b border-outline-dark">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-lg bg-surface-container-high border border-outline-dark flex items-center justify-center text-primary-container">
+                        <span class="material-symbols-outlined text-[24px]" data-icon="edit_note">edit_note</span>
+                    </div>
+                    <div>
+                        <h1 class="font-headline-md text-headline-md text-on-surface font-bold tracking-tight">Kategori Düzenle</h1>
+                        <p class="font-body-md text-body-md text-on-surface-muted mt-1">Kategori adını güncelleyin ve kaydedin.</p>
+                    </div>
+                </div>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-surface-container-high border border-outline-dark text-primary-container font-label-md text-label-md">
+                    <span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+                    @Model.Name
+                </span>
+            </div>
+         
+            <form type="post" asp-controller="Category" asp-action="Edit" class="pt-6 space-y-6" ">
+                <div class="space-y-2">
+                    <label class="block font-label-md text-label-md text-on-surface" for="category-name">
+                        Kategori Adı
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-on-surface-muted">
+                            <span class="material-symbols-outlined text-[20px]" data-icon="label">label</span>
+                        </div>
+                        <input autocomplete="off" class="w-full bg-surface border border-outline-dark rounded py-3 pl-11 pr-4 text-on-surface font-body-lg text-body-lg focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all" id="category-name" asp-for="Name" required="" type="text"  />
+                    </div>
+                    <p class="font-caption text-caption text-on-surface-muted">
+                        Bu kategori adı gelen kutunuzdaki tüm ilişkili kurallar ve filtrelerde geçerli olacaktır.
+                    </p>
+                </div>
+              
+                <div class="pt-4 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 border-t border-outline-dark">
+                    <a class="w-full sm:w-auto px-5 py-2.5 rounded border border-outline-dark text-on-surface font-label-md text-label-md text-center hover:bg-surface-container-high hover:border-surface-bright transition-all" href="/Category/Index">
+                        Kategorilere Dön
+                    </a>
+                    <button type="submit" class="w-full sm:w-auto px-6 py-2.5 rounded bg-primary-container text-surface font-label-md text-label-md font-bold flex items-center justify-center gap-2 hover:opacity-95 active:scale-95 transition-all" >
+                        <span class="material-symbols-outlined text-[18px]" data-icon="check">check</span>
+                        <span>Değişiklikleri Kaydet</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+      
+    </div>
+   
+  
+</main>
 

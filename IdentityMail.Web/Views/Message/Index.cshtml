@@ -108,7 +108,7 @@
         @foreach (var item in Model)
         {
             <div class="email-item email-unread">
-
+                <div id="mailid" data-id="@item.Id"></div>
                 <div class="unread-indicator-bar"></div>
 
                 <!-- Email Header -->
@@ -129,10 +129,27 @@
                     <!-- Right Side -->
                     <div class="email-actions">
 
-                        <span class="email-time">
+                        <span class="email-time">       
                             @item.SendDate.ToString("dd.MM.yyyy HH:mm")
                         </span>
 
+                        <form method="post" asp-controller="Message" asp-action="MessageCategoryAssign">
+
+							<input type="hidden" name="messageId" value="@item.Id" />
+
+                            @Html.DropDownList(
+                            "categoryId",
+                                                new SelectList(
+                                                ViewBag.Categories as IEnumerable<SelectListItem>,
+                                                "Value",
+                                                "Text",
+                                                item.CategoryId
+                                                ),
+                                                new { @class = "categories-dropdown" }
+                                                )
+                             <button class="btn btn-outline-info" type="submit">Kategori Değiştir</button>
+                        </form>
+                       
 
                         <a href="/Message/ToggleImportant/@item.Id"
                            class="nav-btn important-btn @(item.IsImportant ? "important-active" : "")">
@@ -361,5 +378,7 @@
                 .classList.toggle("active");
 
         });
+
+     
     </script>
 }

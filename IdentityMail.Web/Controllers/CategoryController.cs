@@ -10,15 +10,10 @@ namespace IdentityMail.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var categories= await _context.Categories.ToListAsync();
-            return View(categories);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Create()
-        {
+            
             return View();
         }
+
 
 
         [HttpPost]
@@ -51,11 +46,13 @@ namespace IdentityMail.Web.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var category= await _context.Categories.FindAsync(id);
-           
-                _context.Categories.Remove(category);
-                await _context.SaveChangesAsync();
-            
-            return View();
+            if(category == null)
+                return NotFound();
+
+            category.IsActive = false;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
     }

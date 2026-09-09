@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="utf-8" />
@@ -350,6 +356,17 @@
                 box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.2);
             }
 
+        .subject-input{
+            width: 100%;
+            background-color: var(--surface-container-low);
+            border: 1px solid var(--outline-dark);
+            color: var(--on-surface);
+            border-radius: 8px;
+            padding: 8px 16px 8px 14px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+        }
 
         /* NAVBAR BUTONLARI */
 
@@ -420,6 +437,10 @@
 </head>
 
 <body>
+    
+ @if (SignInManager.IsSignedIn(User))
+        {
+         
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
@@ -469,13 +490,13 @@
             <ul>
 
                 <li>
-                    <a class="nav-link-item" href="/Dashboard/Index">
+                    <a class="nav-link-item" href="/Profile/Index">
                         <span class="material-symbols-outlined">
                             dashboard
                         </span>
 
                         <span>
-                            Dashboard
+                            Profil
                         </span>
                     </a>
                 </li>
@@ -487,7 +508,7 @@
                         </span>
 
                         <span>
-                            Gelen Kutusu
+                            Gelen Kutusu (Okunmamış @ViewBag.NotIsReadMessages )
                         </span>
                     </a>
                 </li>
@@ -556,9 +577,9 @@
             </ul>
 
         </nav>
-
-
-        <!-- PROFİL -->
+   
+        
+      
         <div class="user-profile">
 
             <img alt="User profile avatar"
@@ -568,11 +589,14 @@
             <div style="overflow: hidden;">
 
                 <p class="user-name">
-                    Alex Mercer
+                        @{
+                            var currentuser = await UserManager.GetUserAsync(User);
+                        }
+                        @currentuser.FirstName @currentuser.LastName
                 </p>
 
                 <p class="user-email">
-                    alex@obsidian.io
+                    @currentuser.Email
                 </p>
 
             </div>
@@ -601,9 +625,6 @@
                     </span>
 
                 </div>
-
-
-            
 
             </div>
 
@@ -644,6 +665,22 @@
     <!-- BOOTSTRAP JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     @RenderSection("Scripts", required: false)
+
+    <script>
+        $('.email-body').on('click', function(){
+            var $mailrow = $(this).closest('.email-item');
+            var $div= $mailrow.find('#mailid');
+           
+            $id= $div.data("id");
+
+           window.location.href = '/Message/MailDetail/' + $id;
+
+            
+            
+        })
+    </script>
+    }
 </body>
 </html>

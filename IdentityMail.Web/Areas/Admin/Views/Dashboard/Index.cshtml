@@ -76,13 +76,13 @@
                             {
                                 <tr>
                                     <td style="display: flex; align-items: center; gap: 12px;">
-                                        <div style="width: 32px; height: 32px; border-radius: 16px; background-color: #2a2a2a; display: flex; justify-content: center; align-items: center; font-size: 12px; font-weight: 600;">M</div>
+                                       
                                         <div style="display: flex; flex-direction: column;">
                                             <span style="font-size: 14px; color: #e5e2e1;">@item.Name</span>
                                             
                                         </div>
                                     </td>
-                                    <td style="font-size: 14px;">@item.TotalCount</td>
+                                    <td style="font-size: 14px;"> <span style=" color: #e5e2e1;">@item.TotalCount </span></td>
                                     <td><span class="pill pill-primary">@item.IsActive</span></td>
                                 </tr>
                             }
@@ -93,27 +93,38 @@
                 </div>
             </div>
             <!-- Top Categories -->
+            <!-- Top Categories -->
             <div class="card">
                 <div class="card-header">
-                    <div style="font-size: 18px; font-weight: 600;">En Popüler Kategoriler</div>
+                    <div style="font-size: 18px; font-weight: 600; color: #e5e2e1;">
+                        En Popüler Kategoriler
+                    </div>
                 </div>
-                <div class="chart-placeholder">
-                    <div class="bar" style="height: 80%;"></div>
-                    <div class="bar" style="height: 60%;"></div>
-                    <div class="bar" style="height: 40%;"></div>
-                    <div class="bar" style="height: 30%;"></div>
-                    <div class="bar" style="height: 20%;"></div>
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
-                   @foreach(var item in Model.Categories)
-                    {
-                        <div style="display: flex; justify-content: space-between; font-size: 14px;">
-                            <span style="display: flex; align-items: center; gap: 8px;"><div style="width: 8px; height: 8px; border-radius: 4px; background-color: #ffb690;"></div> @item.Name</span>
-                            <span style="color: #a1a1aa;">@item.TotalCount</span>
-                        </div>
-                    }
-                  
-                   
+
+                <div style="overflow-x: auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Kategori</th>
+                                <th>Mesaj Sayısı</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var item in Model.Categories)
+                            {
+                                <tr>
+                                    <td style="color: #e5e2e1 !important;">
+                                        @item.Name
+                                    </td>
+
+                                    <td style="color: #e5e2e1 !important;">
+                                        @item.TotalCount
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

@@ -20,6 +20,8 @@
                             <th>Profil</th>
                             <th>Ad</th>
                             <th>Soyad</th>
+                            <th>Kullanıcı Adı</th>
+                            
                             <th class="text-end">Güncelle</th>
                         </tr>
                     </thead>
@@ -29,13 +31,14 @@
                         <tr>
                             <td>
                                 <div class="profile-image">
-                                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuByxDswBd1bXQzsdfitN8v4WidO6P0lJq_sLBL_5aN6bun_UlmfAM-nf8Yj_ZFBBMeI_YxDcc3lAWKhDFlqnEUb9ZgL5I4nrl4Jl2MwKDOZaSY1rJL7zg019iPxqptRd-EYnGhLmf2CSd5jtZMqqfscG2MJ_MMUa3oqJS2Kc0mz1ePMeG5xLIZIh0pkqP4CY-j--z1chxpZeKw1U2KR9VdEr89JwlMMuUOE21qfRwhoNvGxx4cnijoLbA"
+                                    <img src="@Model.ProfileImageUrl"
                                          alt="Profil">
                                 </div>
                             </td>
 
-                            <td>Elara</td>
-                            <td>Vance</td>
+                            <td>@Model.FirstName</td>
+                            <td>@Model.LastName</td>
+                            <td>@Model.UserName</td>
 
                             <td class="text-end">
                                 <a href="/Profile/EditProfile/@Model.Id" class="btn-update">
@@ -53,23 +56,7 @@
 
             </div>
 
-            <div class="table-footer">
-
-                <span>
-                    24 kullanıcıdan 1 - 4 arası gösteriliyor
-                </span>
-
-                <div class="pagination">
-
-                    <button>Önceki</button>
-                    <button class="active">1</button>
-                    <button>2</button>
-                    <button>Sonraki</button>
-
-                </div>
-
-            </div>
-
+           
         </div>
 
     </div>

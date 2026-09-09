@@ -1,9 +1,11 @@
 ﻿using IdentityMail.Web.Context;
 using IdentityMail.Web.DTOs.UserMessageDtos;
 using IdentityMail.Web.Entities;
+using IdentityMail.Web.Migrations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 using PagedList.Core;
@@ -23,8 +25,8 @@ namespace IdentityMail.Web.Controllers
             ViewBag.FullName = $"{user.FirstName} {user.LastName}";
 
             var messageList =  _context.UserMessages
-                .Include(a => a.Sender)
-                .Where(m => m.ReceiverId == user.Id && m.IsDeleted == false);
+                .Include(a => a.Sender).Include(a => a.Category)
+                .Where(m => m.ReceiverId == user.Id && !m.IsDeleted && !m.IsDraft);
                 
             if(!string.IsNullOrEmpty(search))
             {
@@ -59,9 +61,36 @@ namespace IdentityMail.Web.Controllers
             messageList = messageList.OrderByDescending(m => m.SendDate);
             PagedList<UserMessage> model = new PagedList<UserMessage>(messageList, page, pageSize);
 
+            var notIsReadMessageList= await _context.UserMessages.CountAsync(m => m.ReceiverId == user.Id && m.IsRead == false && !m.IsDeleted && !m.IsDraft);
+            ViewBag.NotIsReadMessages = notIsReadMessageList;
+
+            ViewBag.Categories = await _context.Categories
+            .Where(a => a.IsActive)
+            .Select(a => new SelectListItem
+            {
+                Text = a.Name,
+                Value = a.Id.ToString()
+            })
+            .ToListAsync();
+
             return View(model);
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> MessageCategoryAssign(int categoryId, int messageId)
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var message = await _context.UserMessages.FirstOrDefaultAsync(x => x.ReceiverId == user.Id && x.Id == messageId);
+            if(message is null)
+            {
+                return NotFound();
+            }   
+
+            message.CategoryId = categoryId;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
 
         [HttpGet]
         public async Task<IActionResult> SendMail()
@@ -95,7 +124,7 @@ namespace IdentityMail.Web.Controllers
         }
 
 
-
+        [HttpGet]
         public async Task<IActionResult> MailDetail(int id)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -103,13 +132,80 @@ namespace IdentityMail.Web.Controllers
                 return NotFound();
             
             var message = await _context.UserMessages.Include(x => x.Sender).FirstOrDefaultAsync(x => x.Id == id && x.ReceiverId == user.Id);
+
             if (message == null)
                 return NotFound();
 
-            message.IsRead = true;
+
+            if (!message.IsRead)
+            {
+                message.IsRead = true;
+                await _context.SaveChangesAsync();
+            }
+
+            var messageList = await _context.UserMessages.Where(x => x.ReplyToMessageId == message.Id)
+              .Include(x => x.Sender)
+              .ToListAsync();
+
+            var mailDetailDto= new MailDetailDto
+            {
+                UserMessage = message,
+                Messages = messageList
+            };
+
+            return View(mailDetailDto);
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> Reply(UserMessage userMessage)
+        {
+            var user= await _userManager.FindByNameAsync(User.Identity.Name);
+            if(user is null)
+                return NotFound();
+
+            var reciever = await _userManager.FindByIdAsync(userMessage.ReceiverId.ToString());
+            if(reciever is null)
+            {
+                ModelState.AddModelError("", "Alıcı kullanıcı sisteme kayıtlı değil.");
+
+                var message = await _context.UserMessages.Include(x => x.Sender).Include(x => x.ReplyToMessage)
+                             .ThenInclude(x => x.Sender).FirstOrDefaultAsync(x => x.Id == userMessage.ReplyToMessageId && x.ReceiverId == user.Id);
+
+                if(message == null) return NotFound();
+
+                var messageList = await _context.UserMessages
+               .Where(x => x.ReplyToMessageId == message.Id)
+               .Include(x => x.Sender)
+               .OrderBy(x => x.SendDate)
+               .ToListAsync();
+
+           
+                var mailDetailDto = new MailDetailDto
+                {
+                    UserMessage = message,
+                    Messages = messageList
+                };
+
+                return View("MailDetail", mailDetailDto);
+
+            }
+
+            var replyMessage= new UserMessage
+            { 
+                SenderId = user.Id,
+                ReceiverId = userMessage.ReceiverId,
+                Subject = userMessage.Subject,
+                Body = userMessage.Body,
+                SendDate = DateTime.UtcNow,
+                ReplyToMessageId = userMessage.ReplyToMessageId
+            };
+            _context.UserMessages.Add(replyMessage);
             await _context.SaveChangesAsync();
 
-            return View(message);
+
+            return RedirectToAction(nameof(MailDetail), new {id = userMessage.ReplyToMessageId});
         }
 
 
@@ -121,7 +217,7 @@ namespace IdentityMail.Web.Controllers
                 return NotFound();
             
 
-            var sentMessageList = await _context.UserMessages.Include(x => x.Sender).Where(x => x.SenderId == user.Id && x.IsDeleted == false).ToListAsync();
+            var sentMessageList = await _context.UserMessages.Include(x => x.Sender).Where(x => x.SenderId == user.Id && !x.IsDeleted && !x.IsDraft).ToListAsync();
 
             return View(sentMessageList);
 
@@ -152,7 +248,7 @@ namespace IdentityMail.Web.Controllers
             if(user is null)
                 return NotFound();
 
-            var importantMessageList = await _context.UserMessages.Where(x => x.IsImportant == true && x.ReceiverId == user.Id && x.IsDeleted == false).ToListAsync();
+            var importantMessageList = await _context.UserMessages.Include(x=> x.Sender).Where(x => x.IsImportant == true && x.ReceiverId == user.Id && x.IsDeleted == false && x.IsDraft== false).ToListAsync();
             return View(importantMessageList);
 
         }
@@ -166,7 +262,7 @@ namespace IdentityMail.Web.Controllers
             if(user is null)
                 return NotFound();
 
-            var message = await _context.UserMessages.FirstOrDefaultAsync(x => x.Id == id && x.ReceiverId == user.Id);
+            var message = await _context.UserMessages.FindAsync(id);
             if (message == null)
                 return NotFound();
 
@@ -184,7 +280,7 @@ namespace IdentityMail.Web.Controllers
             if(user is null)
                 return NotFound();  
 
-            var message = await _context.UserMessages.FirstOrDefaultAsync(x => x.Id == id && x.ReceiverId == user.Id);
+            var message = await _context.UserMessages.FirstOrDefaultAsync(x => x.Id == id && x.ReceiverId == user.Id && x.IsDeleted);
             if (message == null)
                 return NotFound();
 
@@ -201,22 +297,41 @@ namespace IdentityMail.Web.Controllers
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             if(user is null) return NotFound(); 
 
-            var trashMessageList = await _context.UserMessages.Include(a => a.Sender).Where(x => x.ReceiverId == user.Id && x.IsDeleted == true).ToListAsync();
+            var trashMessageList = await _context.UserMessages.Include(a => a.Sender).Where(x => x.ReceiverId == user.Id  && x.IsDeleted).ToListAsync();
 
             return View(trashMessageList);
 
         }
 
+
+      
         public async Task<IActionResult> Delete(int id)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             if(user is null) return NotFound();
 
-            var deleteMessage = await _context.UserMessages.FirstOrDefaultAsync(x => x.Id == id && x.ReceiverId == user.Id);
+            var deleteMessage = await _context.UserMessages.FindAsync(id);
             if (deleteMessage is null)
                 return NotFound();
-
+           
             _context.UserMessages.Remove(deleteMessage);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Trash","Message");
+        }
+
+        //mesajı şikayet etme işlemi
+        public async Task<IActionResult> Report(int id)
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if(user is null) return NotFound();
+
+            var message = await _context.UserMessages.FirstOrDefaultAsync(x => x.Id == id && x.ReceiverId == user.Id && !x.IsDeleted);
+            if (message is null)
+                return NotFound();
+
+            message.IsComplaint = true;
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

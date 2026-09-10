@@ -1,6 +1,7 @@
 ﻿using IdentityMail.Web.Areas.Admin.Models;
 using IdentityMail.Web.Context;
 using IdentityMail.Web.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using System.Linq;
 namespace IdentityMail.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class DashboardController : Controller
     {
         private readonly UserManager<AppUser> _userManager;

@@ -42,6 +42,7 @@ namespace IdentityMail.Web.Controllers
                     return View(registerDto);
                 }
             }
+            await _userManager.AddToRoleAsync(user, "User");
 
             return RedirectToAction("Login","Auth");
         }
@@ -64,9 +65,15 @@ namespace IdentityMail.Web.Controllers
                 ModelState.AddModelError(string.Empty, "Bu Email sistemde kayıtlı değil.");
                 return View(loginDto);
             }
+            
             var result = await _signInManager.PasswordSignInAsync(user, loginDto.Password, false, false);
             if (!result.Succeeded) {
                 ModelState.AddModelError(string.Empty, "Email veya Şifre hatalı");
+            }
+
+            if(User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
             }
             return RedirectToAction("Index","Message");
         }
@@ -90,7 +97,27 @@ namespace IdentityMail.Web.Controllers
         public async Task<IActionResult> ChangePassword(ChangePasswordDto changePasswordDto)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            await _userManager.ChangePasswordAsync(user, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
+            if(user is null)
+            {
+                ModelState.AddModelError(string.Empty, "Kullanıcı bulunamadı");
+                return View(changePasswordDto);
+            }
+
+            if(!ModelState.IsValid)
+            {
+                return View(changePasswordDto);
+            }
+
+            IdentityResult result= await _userManager.ChangePasswordAsync(user, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
+
+            if(!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError(string.Empty, error.Description);
+                return View(changePasswordDto);
+            }
+
+            TempData["SuccessMessage"] = "Şifre Değiştirme İşleminiz Başarıyla Gerçekleştirildi!.";
             return View();
         }
 

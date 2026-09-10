@@ -71,21 +71,21 @@
                                     <input id="user-id" type="hidden" value="@item.UserId" data- />
                                 </td>
                                 <td class="py-4 px-6">
-                                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-surface-container-highest/50 border border-outline-dark text-on-surface-variant">
+                                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 ">
                                         
                                         <span class="font-caption text-caption">@item.FullName</span>
                                     </div>
                                 </td>
                                 <td class="py-4 px-6">
-                                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-surface-container-highest/50 border border-outline-dark text-on-surface-variant">
+                                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-surface-container-highest/50 border btn-outline-light text-on-surface-variant">
                                         <span class="material-symbols-outlined text-[14px]">edit_document</span>
                                         <span class="font-caption text-caption"> @(@item.Roles.FirstOrDefault() ?? "Rol Yok") </span>
                                     </div>
                                 </td>
                                 <td class="py-4 px-6">
                                     <div class="inline-flex items-center gap-2">
-                                        <span class="h-2 w-2 rounded-full bg-outline-dark"></span>
-                                        <span class="font-caption text-caption text-on-surface-muted">@item.IsActive</span>
+                                        <span class="h-2 w-2 rounded-full @(item.IsActive ? "bg-green-500" : "bg-outline-dark")"></span>
+                                        <span class="font-caption text-caption text-on-surface-muted">@(item.IsActive ? "Aktif" : "Pasif")</span>
                                     </div>
                                 </td>
                                 <td class="py-4 px-6 text-right">

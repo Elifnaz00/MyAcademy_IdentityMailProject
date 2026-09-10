@@ -147,7 +147,9 @@
                                                 ),
                                                 new { @class = "categories-dropdown" }
                                                 )
-                             <button class="btn btn-outline-info" type="submit">Kategori Değiştir</button>
+                        <button class="category-change-btn" type="submit">
+                            Kategori Değiştir
+                        </button>
                         </form>
                        
 
@@ -173,18 +175,24 @@
                 </div>
 
 
-                <!-- Email Body -->
-                <div class="email-body">
+            <!-- Email Body -->
+            <div class="email-body">
 
+                <div class="mail-info-row">
+                    <span class="mail-label">Konu</span>
                     <h3 class="email-subject">
                         @item.Subject
                     </h3>
-
-                    <p class="email-preview">
-                        @item.Body
-                    </p>
-
                 </div>
+
+                <div class="mail-message">
+                   
+                    <p class="email-preview">
+                        @(item.Body.Length > 80 ? item.Body.Substring(0, 80) : item.Body)
+                    </p>
+                </div>
+
+            </div>
 
             </div>
         }
@@ -199,7 +207,48 @@
 
 
 <style>
+    .email-time {
+        display: block;
+        min-width: 125px;
+        text-align: right;
+        white-space: nowrap;
+        font-size: 12px;
+    }
+    .mail-info-row {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
 
+    .mail-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #8f8f8f;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        flex-shrink: 0;
+    }
+
+    .email-subject {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #f1f1f1;
+    }
+
+    .mail-message {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+    }
+
+    .email-preview {
+        margin: 0;
+        font-size: 14px;
+        color: #b5b5b5;
+        line-height: 1.5;
+    }
     /* Mail üst sağ taraf */
     .email-actions {
         display: flex;
@@ -207,8 +256,57 @@
         gap: 8px;
         flex-shrink: 0;
     }
+    .email-item{
+        background-color: #292929;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #3a3a3a;
+    }
 
+    .category-form {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
 
+    .categories-dropdown,
+    .category-change-btn {
+        height: 36px;
+        border: 1px solid #3a3a3a;
+        border-radius: 8px;
+        background-color: #292929;
+        color: #f1f1f1;
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    /* Dropdown */
+    .categories-dropdown {
+        min-width: 130px;
+        padding: 0 10px;
+        outline: none;
+    }
+
+    /* Buton */
+    .category-change-btn {
+        padding: 0 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+        .category-change-btn:hover {
+            background-color: #363636;
+            border-color: #4a4a4a;
+            color: #ffffff;
+        }
+
+    /* Dropdown seçenekleri */
+    .categories-dropdown option {
+        background-color: #292929;
+        color: #f1f1f1;
+    }
+
+       
     /* Tarih */
     .email-time {
         display: block;
@@ -216,6 +314,8 @@
         text-align: right;
         white-space: nowrap;
     }
+
+  
 
 
     /* Sil butonu */
@@ -352,7 +452,9 @@
     }
 
     .email-list {
+       
         min-height: 450px;
+        margin-top: 20px;
     }
 
     .important-btn {

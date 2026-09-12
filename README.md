@@ -14,10 +14,6 @@ Admin panelinde ise kullanıcı, mesaj ve kategori verileri **LINQ ve Entity Fra
 
 ![Login](screenshots/cormail1.png)
 
-### 📝 Register
-
-![Register](screenshots/register.png)
-
 ### 📥 Inbox
 
 ![Inbox](screenshots/cormail3.png)
@@ -37,6 +33,10 @@ Admin panelinde ise kullanıcı, mesaj ve kategori verileri **LINQ ve Entity Fra
 ### 👤 Profile
 
 ![Profile](screenshots/cormail6.png)
+
+### 👤 Reset Password 
+
+![Profile](screenshots/Ekran Görüntüsü (393).png)
 
 ### 👑 Admin Dashboard
 

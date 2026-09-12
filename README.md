@@ -36,7 +36,7 @@ Admin panelinde ise kullanıcı, mesaj ve kategori verileri **LINQ ve Entity Fra
 
 ### 👤 Reset Password 
 
-![Profile](screenshots/Ekran Görüntüsü (393).png)
+![Profile](screenshots/cormail20.png)
 
 ### 👑 Admin Dashboard
 

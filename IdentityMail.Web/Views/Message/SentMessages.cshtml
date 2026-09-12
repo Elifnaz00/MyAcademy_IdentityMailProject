@@ -1,35 +1,34 @@
 ﻿@model List<UserMessage>
+
 @{
     ViewData["Title"] = "SentMessages";
     Layout = "~/Views/Shared/_UserLayout.cshtml";
 }
 
-
-
-
 <main class="main-content">
+
 
     <!-- Header / Filters -->
     <div class="page-header">
+
         <div>
             <h2 class="page-title">
                 Gönderilenler
             </h2>
         </div>
 
-        <div class="search-container d-none d-md-block ">
+        <div class="search-container d-none d-md-block">
 
             <span class="material-symbols-outlined search-icon">
                 search
             </span>
 
             <input class="search-input"
-                   placeholder="Gönderilenler mesajlar arasında ara..."
+                  
                    type="text" />
 
-
-
         </div>
+
         <div class="d-flex gap-2">
 
             <button class="filter-btn">
@@ -56,7 +55,7 @@
 
         @foreach (var item in Model)
         {
-            <div class="email-item email-unread">
+            <div class="email-item">
 
                 <div class="unread-indicator-bar"></div>
 
@@ -69,7 +68,7 @@
                         <div class="unread-dot"></div>
 
                         <span class="sender-name">
-                            @item.Sender.FirstName @item.Sender.LastName
+                            @item.Receiver.FirstName @item.Receiver.LastName
                         </span>
 
                     </div>
@@ -82,14 +81,14 @@
                             @item.SendDate.ToString("dd.MM.yyyy HH:mm")
                         </span>
 
-                        <a href="/Message/MoveToTrash/@item.Id" class="nav-btn delete-btn">
+                        <a href="/Message/MoveToTrash/@item.Id"
+                           class="nav-btn delete-btn">
 
                             <span class="material-symbols-outlined">
                                 delete
                             </span>
 
                         </a>
-
 
                     </div>
 
@@ -113,13 +112,103 @@
         }
 
     </div>
+    
 
 </main>
 
-
 <style>
 
-    /* Mail üst sağ taraf */
+    /* ================================
+           MAIL LIST
+           ================================ */
+
+    .email-list {
+        min-height: 450px;
+        margin-top: 20px;
+    }
+
+
+    /* Her mail ayrı kart */
+    .email-item {
+        background-color: #292929;
+        border: 1px solid #3a3a3a;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        overflow: hidden;
+        transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+
+        /* Mail üzerine gelindiğinde */
+        .email-item:hover {
+            background-color: #2d2d2d;
+            border-color: #4a4a4a;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+
+        /* Son mail */
+        .email-item:last-child {
+            margin-bottom: 0;
+        }
+
+
+    /* ================================
+           MAIL HEADER
+           ================================ */
+
+    .email-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 16px;
+        border-bottom: 1px solid #3a3a3a;
+    }
+
+
+    /* Gönderen */
+    .email-sender {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+    }
+
+
+    /* Gönderen adı */
+    .sender-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+
+    /* ================================
+           MAIL BODY
+           ================================ */
+
+    .email-body {
+        padding: 14px 16px;
+    }
+
+
+    /* Konu */
+    .email-subject {
+        margin: 0 0 6px 0;
+    }
+
+
+    /* Mesaj önizleme */
+    .email-preview {
+        margin: 0;
+    }
+
+
+    /* ================================
+           MAIL ACTIONS
+           ================================ */
+
     .email-actions {
         display: flex;
         align-items: center;
@@ -134,6 +223,7 @@
         min-width: 125px;
         text-align: right;
         white-space: nowrap;
+        font-size: 12px;
     }
 
 
@@ -150,17 +240,25 @@
         }
 
 
-    /* Mail header hizalama */
-    .email-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-    }
+    /* ================================
+           MOBİL
+           ================================ */
 
-
-    /* Mobil */
     @@media (max-width: 768px) {
+
+        .email-item {
+            margin-bottom: 8px;
+            border-radius: 8px;
+        }
+
+        .email-header {
+            padding: 12px;
+            gap: 8px;
+        }
+
+        .email-body {
+            padding: 12px;
+        }
 
         .email-actions {
             gap: 4px;
@@ -173,4 +271,3 @@
     }
 
 </style>
-

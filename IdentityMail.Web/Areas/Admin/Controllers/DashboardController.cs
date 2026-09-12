@@ -29,12 +29,21 @@ namespace IdentityMail.Web.Areas.Admin.Controllers
             var unReadMessagesCount = await _appDbContext.UserMessages.Where(x => x.IsRead == false).CountAsync();
             var trackCount = await _appDbContext.UserMessages.Where(x => x.IsDeleted == true).CountAsync();
 
-          
+          /*
             var groupCategoryList = await _appDbContext.Categories.GroupBy(x => x.Name).Select(g => new CategoryListViewModel
             {
                 Name = g.Key,
                 TotalCount = g.Count()
             }).ToListAsync();
+
+
+            */
+
+            var groupByCategoryList= await _appDbContext.UserMessages.Include(x=>x.Category).GroupBy(x => x.Category.Name).Select(g => new CategoryListViewModel
+            {
+                Name = g.Key,
+                TotalCount = g.Count()
+            }).ToListAsync();   
 
             var groupMessageList = await _appDbContext.UserMessages.Include(a => a.Sender).GroupBy(x => x.Sender.UserName).Select(g => new UserListViewModel
             {
@@ -42,7 +51,7 @@ namespace IdentityMail.Web.Areas.Admin.Controllers
                 IsActive = g.Select(x => x.Sender.IsActive).First().ToString(),
                 TotalCount = g.Count()
 
-            }).OrderBy(x => x.TotalCount).Take(5).ToListAsync();
+            }).OrderByDescending(x => x.TotalCount).Take(5).ToListAsync();
 
             var dashboardVm= new DashboardViewModel
             {
@@ -50,7 +59,7 @@ namespace IdentityMail.Web.Areas.Admin.Controllers
                 TotalUserCount = totalUsersCount,
                 TrackCount = trackCount,
                 UnReadMessageCount = unReadMessagesCount,
-                Categories = groupCategoryList,
+                Categories = groupByCategoryList,
                 UserMessages = groupMessageList
 
             };

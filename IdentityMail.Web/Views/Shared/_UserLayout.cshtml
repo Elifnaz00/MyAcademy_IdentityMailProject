@@ -10,7 +10,7 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
-    <title>@ViewData["Title"] - Obsidian Mail</title>
+    <title>@ViewData["Title"] - CorMail</title>
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -456,11 +456,11 @@
 
             <div>
                 <h1 class="logo-title">
-                    Obsidian Mail
+                    CorMail
                 </h1>
 
                 <p class="logo-subtitle">
-                    Pro Command Center
+                    
                 </p>
             </div>
 
@@ -662,17 +662,12 @@
     @RenderSection("Scripts", required: false)
 
     <script>
-        $('.email-body').on('click', function(){
-            var $mailrow = $(this).closest('.email-item');
-            var $div= $mailrow.find('#mailid');
-           
-            $id= $div.data("id");
+               $('.email-body').on('click', function () {
 
-           window.location.href = '/Message/MailDetail/' + $id;
+                var id = $(this).data('id');
 
-            
-            
-        })
+                window.location.href = '/Message/MailDetail/' + id;
+            });
     </script>
     }
 </body>

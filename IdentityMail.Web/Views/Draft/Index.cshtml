@@ -1,4 +1,5 @@
 ﻿@model List<UserMessage>
+
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_UserLayout.cshtml";
@@ -6,41 +7,53 @@
 
 <main class="main-content">
 
+   
     <!-- Header / Filters -->
     <div class="page-header">
+
         <div>
             <h2 class="page-title">
                 Taslaklar
             </h2>
         </div>
 
-        <div class="search-container d-none d-md-block ">
+
+        <div class="search-container d-none d-md-block">
 
             <span class="material-symbols-outlined search-icon">
                 search
             </span>
 
             <input class="search-input"
-                   placeholder="Taslaklarda Ara..."
+                  
                    type="text" />
 
-
-
         </div>
+
+
         <div class="d-flex gap-2">
 
             <button class="filter-btn">
-                <span class="material-symbols-outlined" style="font-size: 18px;">
+
+                <span class="material-symbols-outlined"
+                      style="font-size: 18px;">
                     filter_list
                 </span>
+
                 Filtrele
+
             </button>
 
+
             <button class="filter-btn">
-                <span class="material-symbols-outlined" style="font-size: 18px;">
+
+                <span class="material-symbols-outlined"
+                      style="font-size: 18px;">
                     sort
                 </span>
+
                 Sırala
+
             </button>
 
         </div>
@@ -53,21 +66,19 @@
 
         @foreach (var item in Model)
         {
-            <div class="email-item email-unread">
-
-                <div class="unread-indicator-bar"></div>
+            <div class="email-item">
 
                 <!-- Email Header -->
                 <div class="email-header">
 
-                    <!-- Sender -->
+                    <!-- Receiver -->
                     <div class="email-sender">
 
-                        <div class="unread-dot"></div>
-
                         <span class="sender-name">
-                            @item.Receiver.FirstName @item.Receiver.LastName
-                        </span>
+                            @(item.Receiver != null
+                                                    ? $"{item.Receiver.FirstName} {item.Receiver.LastName}"
+                                                    : "Alıcı belirtilmemiş")
+                    </span>
 
                     </div>
 
@@ -80,10 +91,16 @@
                         </span>
 
 
-                        <a href="/Draft/Edit/@item.Id" class="btn btn-warning">
+                        <!-- Düzenle -->
+                        <a href="/Draft/Edit/@item.Id"
+                           class="btn btn-warning draft-edit-btn">
                             Düzenle
                         </a>
-                        <a href="/Draft/Delete/@item.Id" class="btn btn-danger">
+
+
+                        <!-- Tamamen Sil -->
+                        <a href="/Draft/Delete/@item.Id"
+                           class="btn btn-danger draft-delete-btn">
                             Tamamen Sil
                         </a>
 
@@ -106,16 +123,101 @@
                 </div>
 
             </div>
-        }
+                }
 
     </div>
+   
 
 </main>
 
-
 <style>
 
-    /* Mail üst sağ taraf */
+  
+
+    .email-list {
+        min-height: 450px;
+        margin-top: 20px;
+    }
+
+
+   
+
+    .email-item {
+        background-color: #292929;
+        border: 1px solid #3a3a3a;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        overflow: hidden;
+        transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+
+        .email-item:hover {
+            background-color: #2d2d2d;
+            border-color: #4a4a4a;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+
+        .email-item:last-child {
+            margin-bottom: 0;
+        }
+
+
+    /* ================================
+           MAIL HEADER
+           ================================ */
+
+    .email-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 16px;
+        border-bottom: 1px solid #3a3a3a;
+    }
+
+
+    /* Alıcı */
+    .email-sender {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+    }
+
+
+    /* Alıcı adı */
+    .sender-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+
+    /* ================================
+           MAIL BODY
+           ================================ */
+
+    .email-body {
+        padding: 14px 16px;
+    }
+
+
+    .email-subject {
+        margin: 0 0 6px 0;
+    }
+
+
+    .email-preview {
+        margin: 0;
+    }
+
+
+    /* ================================
+           MAIL ACTIONS
+           ================================ */
+
     .email-actions {
         display: flex;
         align-items: center;
@@ -130,45 +232,99 @@
         min-width: 125px;
         text-align: right;
         white-space: nowrap;
+        font-size: 12px;
     }
 
 
-    /* Sil butonu */
-    .delete-btn {
-        flex-shrink: 0;
+    /* ================================
+           TASLAK BUTONLARI
+           ================================ */
+
+    .draft-edit-btn,
+    .draft-delete-btn {
+        height: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
         transition: all 0.2s ease;
     }
 
 
-        .delete-btn:hover {
-            color: var(--error) !important;
-            background-color: rgba(255, 180, 171, 0.1) !important;
-        }
-
-
-    /* Mail header hizalama */
-    .email-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
+    /* Düzenle */
+    .draft-edit-btn {
+        background-color: #3a3a3a;
+        border: 1px solid #4a4a4a;
+        color: #ffb599;
     }
 
 
-    /* Mobil */
+        .draft-edit-btn:hover {
+            background-color: #474747;
+            border-color: #ffb599;
+            color: #ffb599;
+        }
+
+
+    /* Tamamen Sil */
+    .draft-delete-btn {
+        background-color: transparent;
+        border: 1px solid #5a3a35;
+        color: #ffb4ab;
+    }
+
+
+        .draft-delete-btn:hover {
+            background-color: rgba(255, 180, 171, 0.1);
+            border-color: #ffb4ab;
+            color: #ffb4ab;
+        }
+
+
+    /* ================================
+           MOBİL
+           ================================ */
+
     @@media (max-width: 768px) {
+
+        .email-item {
+            margin-bottom: 8px;
+            border-radius: 8px;
+        }
+
+
+        .email-header {
+            padding: 12px;
+            gap: 8px;
+        }
+
+
+        .email-body {
+            padding: 12px;
+        }
+
 
         .email-actions {
             gap: 4px;
         }
 
+
         .email-time {
             min-width: auto;
+            font-size: 11px;
+        }
+
+
+        .draft-edit-btn,
+        .draft-delete-btn {
+            height: 32px;
+            padding-left: 8px;
+            padding-right: 8px;
             font-size: 11px;
         }
     }
 
 </style>
-
-
-

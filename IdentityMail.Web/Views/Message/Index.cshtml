@@ -8,7 +8,6 @@
 <main class="main-content">
 
     <!-- Header / Filters -->
-    <!-- Header / Filters -->
     <div class="page-header">
 
         <div>
@@ -20,7 +19,6 @@
         <!-- Search -->
         <form asp-controller="Message" asp-action="Index" method="get" class="search-container d-none d-md-block">
 
-           
             <input class="search-input"
                    placeholder="Gelen kutusunda ara..."
                    name="search"
@@ -72,7 +70,7 @@
 
                 <select name="isImportant" class="filter-input">
                     <option value="">Tümü</option>
-                    <option  value="true">Önemli</option>
+                    <option value="true">Önemli</option>
                     <option value="false">Normal</option>
                 </select>
 
@@ -108,6 +106,7 @@
         @foreach (var item in Model)
         {
             <div class="email-item email-unread">
+
                 <div id="mailid" data-id="@item.Id"></div>
                 <div class="unread-indicator-bar"></div>
 
@@ -116,6 +115,12 @@
 
                     <!-- Sender -->
                     <div class="email-sender">
+
+                        <div class="profile-image-wrapper">
+                            <img src=@item.Sender.ProfileImageUrl
+                             alt="Profil"
+                             class="email-profile-image" />
+                    </div>
 
                         <div class="unread-dot"></div>
 
@@ -129,16 +134,20 @@
                     <!-- Right Side -->
                     <div class="email-actions">
 
-                        <span class="email-time">       
+                        <span class="email-time">
                             @item.SendDate.ToString("dd.MM.yyyy HH:mm")
                         </span>
 
-                        <form method="post" asp-controller="Message" asp-action="MessageCategoryAssign">
+                        <form method="post"
+                              asp-controller="Message"
+                              asp-action="MessageCategoryAssign">
 
-							<input type="hidden" name="messageId" value="@item.Id" />
+                            <input type="hidden"
+                                   name="messageId"
+                                   value="@item.Id" />
 
                             @Html.DropDownList(
-                            "categoryId",
+                                                "categoryId",
                                                 new SelectList(
                                                 ViewBag.Categories as IEnumerable<SelectListItem>,
                                                 "Value",
@@ -147,78 +156,99 @@
                                                 ),
                                                 new { @class = "categories-dropdown" }
                                                 )
+
                         <button class="category-change-btn" type="submit">
                             Kategori Değiştir
                         </button>
-                        </form>
-                       
 
-                        <a href="/Message/ToggleImportant/@item.Id"
-                           class="nav-btn important-btn @(item.IsImportant ? "important-active" : "")">
+                    </form>
 
-                            <span class="material-symbols-outlined">
-                                @(item.IsImportant ? "star" : "star_border")
-                            </span>
 
-                        </a>
+                    <a href="/Message/ToggleImportant/@item.Id"
+                       class="nav-btn important-btn @(item.IsImportant ? "important-active" : "")">
 
-                        <a href="/Message/MoveToTrash/@item.Id" class="nav-btn delete-btn">
-                             
-                            <span class="material-symbols-outlined">
-                                delete
-                            </span>
+                        <span class="material-symbols-outlined">
+                            @(item.IsImportant ? "star" : "star_border")
+                        </span>
 
-                        </a>
+                    </a>
+
+                    <a href="/Message/MoveToTrash/@item.Id"
+                       class="nav-btn delete-btn">
+
+                        <span class="material-symbols-outlined">
+                            delete
+                        </span>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Email Body -->
+            <div class="email-body" data-id="@item.Id">
+
+                <div class="mail-info-row">
+
+                    <span class="mail-label">Konu :</span>
+
+                    <h3 class="email-subject">
+                        @item.Subject
+                    </h3>
+
+                </div>
+
+                <div class="mail-message">
+
+                    <p class="email-preview">
+                        @(item.Body.Length > 80
+                                                ? item.Body.Substring(0, 80)
+                                                : item.Body)
+                    </p>
 
                     </div>
 
                 </div>
 
-
-            <!-- Email Body -->
-            <div class="email-body">
-
-                <div class="mail-info-row">
-                    <span class="mail-label">Konu</span>
-                    <h3 class="email-subject">
-                        @item.Subject
-                    </h3>
-                </div>
-
-                <div class="mail-message">
-                   
-                    <p class="email-preview">
-                        @(item.Body.Length > 80 ? item.Body.Substring(0, 80) : item.Body)
-                    </p>
-                </div>
-
             </div>
-
-            </div>
-        }
+                }
 
     </div>
+
+
+    <!-- Pagination -->
     <div class="d-flex justify-content-center mt-4 pagination-container">
+
         <pager list="@Model"
                asp-controller="Message"
                asp-action="Index" />
+
     </div>
+
 </main>
 
 
 <style>
+
+    /* Tarih */
     .email-time {
         display: block;
         min-width: 125px;
         text-align: right;
         white-space: nowrap;
         font-size: 12px;
+        opacity: 0.75;
     }
+
+
+    /* Konu */
     .mail-info-row {
         display: flex;
         align-items: baseline;
         gap: 8px;
-        margin-bottom: 8px;
+        margin-bottom: 10px;
     }
 
     .mail-label {
@@ -231,38 +261,98 @@
     }
 
     .email-subject {
-        margin: 0;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 600;
-        color: #f1f1f1;
+        margin: 0;
+        line-height: 1.4;
     }
 
+
+    /* Mesaj */
     .mail-message {
-        display: flex;
-        align-items: baseline;
-        gap: 8px;
+        padding-left: 0;
     }
 
     .email-preview {
-        margin: 0;
-        font-size: 14px;
-        color: #b5b5b5;
+        font-size: 16px;
         line-height: 1.5;
+        margin: 0;
+        color: #a8a8a8;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
     }
+
+
     /* Mail üst sağ taraf */
     .email-actions {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
         flex-shrink: 0;
     }
-    .email-item{
+
+
+    /* Mail Card */
+    .email-item {
         background-color: #292929;
         border-radius: 10px;
         margin-bottom: 10px;
         border: 1px solid #3a3a3a;
+        padding: 16px 18px;
+        transition: border-color 0.2s ease, background-color 0.2s ease;
     }
 
+        .email-item:hover {
+            background-color: #2d2d2d;
+            border-color: #4a4a4a;
+        }
+
+
+    /* Mail Header */
+    .email-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 14px;
+    }
+
+
+    /* Sender */
+    .email-sender {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+    }
+
+    .sender-name {
+        font-size: 14px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+
+    /* Profil Fotoğrafı */
+    .profile-image-wrapper {
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
+    }
+
+    .email-profile-image {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+        border: 1px solid #4a4a4a;
+    }
+
+
+    /* Kategori */
     .category-form {
         display: flex;
         align-items: center;
@@ -280,18 +370,17 @@
         font-weight: 500;
     }
 
-    /* Dropdown */
     .categories-dropdown {
         min-width: 130px;
         padding: 0 10px;
         outline: none;
     }
 
-    /* Buton */
     .category-change-btn {
         padding: 0 12px;
         cursor: pointer;
         transition: all 0.2s ease;
+        white-space: nowrap;
     }
 
         .category-change-btn:hover {
@@ -300,30 +389,17 @@
             color: #ffffff;
         }
 
-    /* Dropdown seçenekleri */
     .categories-dropdown option {
         background-color: #292929;
         color: #f1f1f1;
     }
 
-       
-    /* Tarih */
-    .email-time {
-        display: block;
-        min-width: 125px;
-        text-align: right;
-        white-space: nowrap;
-    }
 
-  
-
-
-    /* Sil butonu */
+    /* Sil Butonu */
     .delete-btn {
         flex-shrink: 0;
         transition: all 0.2s ease;
     }
-
 
         .delete-btn:hover {
             color: var(--error) !important;
@@ -331,29 +407,7 @@
         }
 
 
-    /* Mail header hizalama */
-    .email-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-    }
-
-
-    /* Mobil */
-    @@media (max-width: 768px) {
-
-        .email-actions {
-            gap: 4px;
-        }
-
-        .email-time {
-            min-width: auto;
-            font-size: 11px;
-        }
-    }
-
-    /* Header */
+    /* Filtre Header */
     .page-header {
         display: flex;
         align-items: center;
@@ -361,14 +415,16 @@
         flex-wrap: wrap;
     }
 
-    /* Search alanı */
+
+    /* Search */
     .search-container {
         position: relative;
         flex: 1;
         max-width: 400px;
     }
 
-    /* Filtre paneli */
+
+    /* Filtre Paneli */
     .filter-panel {
         display: none;
         margin-top: 16px;
@@ -377,10 +433,10 @@
         border-radius: 12px;
     }
 
-        /* Panel açıldığında */
         .filter-panel.active {
             display: block;
         }
+
 
     /* Filtreler */
     .filter-form {
@@ -410,7 +466,6 @@
         background: var(--surface);
     }
 
-    /* Filtrele butonu */
     .filter-apply-btn {
         height: 40px;
         padding: 0 18px;
@@ -419,8 +474,96 @@
         cursor: pointer;
     }
 
+
+    /* Liste */
+    .email-list {
+        min-height: 450px;
+        margin-top: 20px;
+    }
+
+
+    /* Pagination */
+    .pagination-container {
+        margin-top: 24px !important;
+        padding-top: 10px;
+        padding-bottom: 20px;
+    }
+
+        .pagination-container ul.pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin: 0;
+        }
+
+        .pagination-container .page-item {
+            margin: 0;
+        }
+
+        .pagination-container .page-link {
+            min-width: 36px;
+            height: 36px;
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #3a3a3a;
+            border-radius: 8px !important;
+            background-color: #292929;
+            color: #bdbdbd;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+            .pagination-container .page-link:hover {
+                background-color: #363636;
+                border-color: #555;
+                color: #ffffff;
+            }
+
+        .pagination-container .page-item.active .page-link {
+            background-color: #3f3f3f;
+            border-color: #666;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .pagination-container .page-item.disabled .page-link {
+            background-color: #242424;
+            border-color: #333;
+            color: #666;
+        }
+
+
+    /* Önemli */
+    .important-btn {
+        flex-shrink: 0;
+        transition: all 0.2s ease;
+    }
+
+        .important-btn:hover {
+            color: #f5b301 !important;
+            background-color: rgba(245, 179, 1, 0.1) !important;
+        }
+
+    .important-active {
+        color: #f5b301 !important;
+    }
+
+
     /* Mobil */
     @@media (max-width: 768px) {
+
+        .email-actions {
+            gap: 4px;
+        }
+
+        .email-time {
+            min-width: auto;
+            font-size: 11px;
+        }
 
         .page-header {
             align-items: stretch;
@@ -444,43 +587,16 @@
             width: 100%;
         }
     }
-
-    .pagination-container {
-        margin-top: auto !important;
-        padding-top: 20px;
-        padding-bottom: 20px;
-    }
-
-    .email-list {
-       
-        min-height: 450px;
-        margin-top: 20px;
-    }
-
-    .important-btn {
-        flex-shrink: 0;
-        transition: all 0.2s ease;
-    }
-
-        .important-btn:hover {
-            color: #f5b301 !important;
-            background-color: rgba(245, 179, 1, 0.1) !important;
-        }
-
-    .important-active {
-        color: #f5b301 !important;
-    }
 </style>
 
 @section Scripts {
     <script>
+
         document.getElementById("filterToggle").addEventListener("click", function () {
 
             document.getElementById("filterPanel")
                 .classList.toggle("active");
 
         });
-
-     
     </script>
 }

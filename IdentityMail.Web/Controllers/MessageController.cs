@@ -16,7 +16,7 @@ namespace IdentityMail.Web.Controllers
     public class MessageController(UserManager<AppUser> _userManager, AppDbContext _context) : Controller
     {
         [HttpGet]
-        public async Task<IActionResult> Index(bool? isRead, bool? isImportant, string? sortOrder, string search, int page=1, int pageSize=6)
+        public async Task<IActionResult> Index(bool? isRead, bool? isImportant, string? sortOrder, string search, int page=1, int pageSize=3)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             if(user is null)
@@ -217,7 +217,7 @@ namespace IdentityMail.Web.Controllers
                 return NotFound();
             
 
-            var sentMessageList = await _context.UserMessages.Include(x => x.Sender).Where(x => x.SenderId == user.Id && !x.IsDeleted && !x.IsDraft).ToListAsync();
+            var sentMessageList = await _context.UserMessages.Include(x => x.Receiver).Where(x => x.SenderId == user.Id && !x.IsDeleted && !x.IsDraft).ToListAsync();
 
             return View(sentMessageList);
 

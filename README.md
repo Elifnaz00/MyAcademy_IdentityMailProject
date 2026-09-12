@@ -44,6 +44,8 @@ Admin panelinde ise kullanıcı, mesaj ve kategori verileri **LINQ ve Entity Fra
 
 ![Admin Dashboard](screenshots/cormail17.png)
 
+![Admin Dashboard](screenshots/cormail21.png)
+
 ![Admin Dashboard](screenshots/cormail19.png)
 
 ---
